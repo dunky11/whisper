@@ -96,6 +96,7 @@ class MultiHeadAttention(nn.Module):
         if mask is not None:
             qk = qk + mask[:n_ctx, :n_ctx]
 
+        print(qk.shape)
         w = F.softmax(qk.float(), dim=-1).to(q.dtype)
         return (w @ v).permute(0, 2, 1, 3).flatten(start_dim=2)
 
