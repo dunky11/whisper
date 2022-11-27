@@ -1,6 +1,5 @@
 import os
 from dataclasses import dataclass
-from functools import lru_cache
 from typing import List, Optional, Tuple, Union
 
 import numpy as np
@@ -157,42 +156,34 @@ class Tokenizer:
         return "".join(outputs)
 
     @property
-    @lru_cache()
     def eot(self) -> int:
         return self.tokenizer.eos_token_id
 
     @property
-    @lru_cache()
     def sot(self) -> int:
         return self._get_single_token_id("<|startoftranscript|>")
 
     @property
-    @lru_cache()
     def sot_lm(self) -> int:
         return self._get_single_token_id("<|startoflm|>")
 
     @property
-    @lru_cache()
     def sot_prev(self) -> int:
         return self._get_single_token_id("<|startofprev|>")
 
     @property
-    @lru_cache()
     def no_speech(self) -> int:
         return self._get_single_token_id("<|nospeech|>")
 
     @property
-    @lru_cache()
     def no_timestamps(self) -> int:
         return self._get_single_token_id("<|notimestamps|>")
 
     @property
-    @lru_cache()
     def timestamp_begin(self) -> int:
         return self.tokenizer.all_special_ids[-1] + 1
 
     @property
-    @lru_cache()
     def language_token(self) -> int:
         """Returns the token id corresponding to the value of the `language` field"""
         if self.language is None:
@@ -211,7 +202,6 @@ class Tokenizer:
         raise KeyError(f"Language {self.language} not found in tokenizer.")
 
     @property
-    @lru_cache()
     def all_language_tokens(self) -> Tuple[int]:
         result = []
         for token, token_id in zip(
@@ -223,17 +213,14 @@ class Tokenizer:
         return tuple(result)
 
     @property
-    @lru_cache()
     def all_language_codes(self) -> Tuple[str]:
         return tuple(self.decode([l]).strip("<|>") for l in self.all_language_tokens)
 
     @property
-    @lru_cache()
     def sot_sequence_including_notimestamps(self) -> Tuple[int]:
         return tuple(list(self.sot_sequence) + [self.no_timestamps])
 
     @property
-    @lru_cache()
     def non_speech_tokens(self) -> Tuple[int]:
         """
         Returns the list of tokens to suppress in order to avoid any speaker tags or non-speech
@@ -270,7 +257,6 @@ class Tokenizer:
         return tokens[0]
 
 
-@lru_cache(maxsize=None)
 def build_tokenizer(name: str = "gpt2"):
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     path = os.path.join(os.path.dirname(__file__), "assets", name)
@@ -291,7 +277,6 @@ def build_tokenizer(name: str = "gpt2"):
     return tokenizer
 
 
-@lru_cache(maxsize=None)
 def get_tokenizer(
     multilingual: bool,
     *,

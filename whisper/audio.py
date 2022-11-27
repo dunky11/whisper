@@ -1,5 +1,4 @@
 import os
-from functools import lru_cache
 from typing import Union
 
 import ffmpeg
@@ -73,7 +72,6 @@ def pad_or_trim(array, length: int = N_SAMPLES, *, axis: int = -1):
     return array
 
 
-@lru_cache(maxsize=None)
 def mel_filters(device, n_mels: int = N_MELS) -> torch.Tensor:
     """
     load the mel filterbank matrix for projecting STFT into a Mel spectrogram.
